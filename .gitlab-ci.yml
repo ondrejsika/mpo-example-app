@@ -1,0 +1,25 @@
+stages:
+  - build
+
+.build:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.19.2-debug
+    entrypoint: [""]
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+      --context $CONTEXT
+      --destination $IMAGE
+
+build-backend:
+  extends: .build
+  variables:
+    IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_REF_SLUG
+    CONTEXT: $CI_PROJECT_DIR/backend
+
+build-frontend:
+  extends: .build
+  variables:
+    IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_REF_SLUG
+    CONTEXT: $CI_PROJECT_DIR/frontend
