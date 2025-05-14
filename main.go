@@ -3,12 +3,12 @@ package main
 import (
 	"os"
 
-	"github.com/sikalabs/hello-world-server/pkg/server"
+	"github.com/ondrejsika/counter/server"
 )
 
 func main() {
-	os.Setenv("TEXT", "Hello MPO!")
-	os.Setenv("COLOR", "white")
-	os.Setenv("BACKGROUND_COLOR", "#91C4F4")
-	server.Server()
+	os.Setenv("EXTRA_TEXT", "Hello MPO!")
+	os.Setenv("PORT", "8000")
+	os.Setenv("BACKEND", "postgres")
+	server.Server(false)
 }

@@ -9,4 +9,3 @@ FROM debian:12-slim
 COPY --from=build /build/mpo-example-app /usr/local/bin/mpo-example-app
 CMD ["/usr/local/bin/mpo-example-app"]
 EXPOSE 8000
-EXPOSE 8001
