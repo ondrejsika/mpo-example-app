@@ -2,7 +2,7 @@ module mpo-example-app
 
 go 1.24.2
 
-require github.com/ondrejsika/counter v0.10.0
+require github.com/ondrejsika/counter v0.10.1
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
