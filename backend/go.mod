@@ -1,4 +1,4 @@
-module mpo-example-app
+module backend
 
 go 1.24.2
 
