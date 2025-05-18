@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: '{{.Release.Name}}-redis'
+spec:
+  volumeClaimTemplates:
+    - metadata:
+        name: redis
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+  selector:
+    matchLabels:
+      app: '{{.Release.Name}}-redis'
+  template:
+    metadata:
+      labels:
+        app: '{{.Release.Name}}-redis'
+    spec:
+      imagePullSecrets:
+        - name: '{{ required ".Values.imagePullSecretName is required" .Values.imagePullSecretName }}'
+      volumes:
+        - name: redis
+          persistentVolumeClaim:
+            claimName: redis
+      containers:
+        - name: main
+          image: '{{ required ".Values.redisImage is required" .Values.redisImage }}'
+          command:
+            - /bin/sh
+            - -c
+            - |
+              exec redis-server --requirepass $REDIS_PASSWORD
+          resources:
+            requests:
+              cpu: 30m
+              memory: 50Mi
+            limits:
+              cpu: 50m
+              memory: 80Mi
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: '{{ required ".Values.redisPasswordSecretName" .Values.redisPasswordSecretName }}'
+                  key: REDIS_PASSWORD
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis
+              mountPath: /data

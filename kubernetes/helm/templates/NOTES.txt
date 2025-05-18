@@ -1,0 +1,5 @@
+See:
+  https://{{ .Values.frontendHost }} (frontend)
+{{- if .Values.backendHost }}
+  https://{{ .Values.backendHost }} (backend)
+{{- end }}

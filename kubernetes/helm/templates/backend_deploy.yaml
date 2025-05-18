@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{.Release.Name}}-backend'
+spec:
+  replicas: 2
+  revisionHistoryLimit: 0
+  selector:
+    matchLabels:
+      app: '{{.Release.Name}}-backend'
+  template:
+    metadata:
+      labels:
+        app: '{{.Release.Name}}-backend'
+    spec:
+      imagePullSecrets:
+        - name: '{{ required ".Values.imagePullSecretName is required" .Values.imagePullSecretName }}'
+      containers:
+        - name: main
+          image: '{{ required ".Values.backendImage is required" .Values.backendImage }}'
+          resources:
+            requests:
+              cpu: 20m
+              memory: 30Mi
+            limits:
+              cpu: 50m
+              memory: 60Mi
+          env:
+            - name: REDIS
+              value: '{{.Release.Name}}-redis'
+            - name: SLOW_START
+              value: '5'
+            - name: EXTRA_TEXT
+              value: {{ .Values.EXTRA_TEXT | quote }}
+            - name: LICENSE
+              valueFrom:
+                  secretKeyRef:
+                    name: '{{ required ".Values.licenseKeySecretName" .Values.licenseKeySecretName }}'
+                    key: LICENSE
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: '{{ required ".Values.redisPasswordSecretName" .Values.redisPasswordSecretName }}'
+                  key: REDIS_PASSWORD
+          ports:
+            - containerPort: 8000
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5

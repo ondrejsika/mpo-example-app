@@ -1,0 +1,15 @@
+# required
+licenseKeySecretName:
+imagePullSecretName:
+redisImage:
+redisPasswordSecretName:
+backendImage:
+sluImage:
+frontendImage:
+frontendHost:
+
+# optional
+backendHost:
+EXTRA_TEXT: ""
+FONT_COLOR: ""
+BACKGROUND_COLOR: ""
