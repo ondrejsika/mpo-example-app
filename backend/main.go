@@ -10,7 +10,6 @@ import (
 func main() {
 	os.Setenv("EXTRA_TEXT", "Hello MPO!")
 	os.Setenv("PORT", "8000")
-	os.Setenv("BACKEND", "postgres")
 
 	if os.Getenv("LICENSE") != "mpo2025" {
 		log.Fatalln("invalid license key in environment variable LICENSE")
